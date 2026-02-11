@@ -325,3 +325,14 @@ def edit_exercise(request, exercise_id):
         "add_exercise.html",
         {"form": form, "workout": exercise.workout_plan, "edit": True},
     )
+
+
+# delete exercise trainer only
+@login_required
+@user_passes_test(is_trainer)
+def delete_exercise(request, exercise_id):
+    exercise = get_object_or_404(Exercise, id=exercise_id)
+    workout_id = exercise.workout_plan.id
+    exercise.delete()
+    messages.success(request, "Exercise deleted")
+    return redirect("workout_detail", workout_id=workout_id)
