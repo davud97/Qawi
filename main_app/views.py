@@ -234,3 +234,15 @@ def enroll_class(request, class_id):
     Enrollment.objects.create(member=request.user, gym_class=gym_class)
     messages.success(request, "Enrolled successfully")
     return redirect("home")
+
+# unenroll class member only
+@login_required
+@user_passes_test(is_member)
+def unenroll_class(request, class_id):
+    gym_class = get_object_or_404(GymClass, id=class_id)
+
+    Enrollment.objects.filter(member=request.user, gym_class=gym_class).delete()
+    messages.success(request, f'Unenrolled from "{gym_class.name}"')
+    return redirect("home")
+
+#crud below
