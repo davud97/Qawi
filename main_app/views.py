@@ -263,3 +263,35 @@ def edit_class(request, class_id):
         form = GymClassForm(instance=gym_class)
 
     return render(request, "create_class.html", {"form": form, "edit": True})
+
+# delete class trainer only
+@login_required
+@user_passes_test(is_trainer)
+def delete_class(request, class_id):
+    gym_class = get_object_or_404(GymClass, id=class_id)
+    gym_class.delete()
+    messages.success(request, "Class deleted")
+    return redirect("home")
+
+
+# edit workout plan trainer only
+@login_required
+@user_passes_test(is_trainer)
+def edit_workout_plan(request, workout_id):
+    workout = get_object_or_404(WorkoutPlan, id=workout_id)
+
+    if request.method == "POST":
+        form = WorkoutPlanForm(request.POST, instance=workout)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Workout plan "{workout.name}" updated')
+            return redirect("class_detail", class_id=workout.gym_class.id)
+    else:
+        form = WorkoutPlanForm(instance=workout)
+
+    return render(
+        request,
+        "add_workout_plan.html",
+        {"form": form, "gym_class": workout.gym_class, "edit": True},
+    )
+
