@@ -29,3 +29,24 @@ def is_member(user):
     profile = get_profile(user)
     return profile is not None and profile.role == "member"
 
+# home page show classes, mark enrolled if member
+def home(request):
+    classes = GymClass.objects.all()
+
+    membership = None
+    if request.user.is_authenticated:
+        membership = Membership.objects.filter(user=request.user).order_by("-id").first()
+
+    enrolled_class_ids = []
+    profile = get_profile(request.user)
+    if profile and profile.role == "member":
+        enrolled_class_ids = list(
+            Enrollment.objects.filter(member=request.user).values_list("gym_class_id", flat=True)
+        )
+
+    return render(
+        request,
+        "home.html",
+        {"classes": classes, "enrolled_class_ids": enrolled_class_ids, "membership": membership},
+    )
+
