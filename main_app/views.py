@@ -128,3 +128,23 @@ def add_workout_plan(request, class_id):
         form = WorkoutPlanForm()
 
     return render(request, "add_workout_plan.html", {"form": form, "gym_class": gym_class})
+
+
+# add exercise trainer only
+@login_required
+@user_passes_test(is_trainer)
+def add_exercise(request, workout_id):
+    workout = get_object_or_404(WorkoutPlan, id=workout_id)
+
+    if request.method == "POST":
+        form = ExerciseForm(request.POST)
+        if form.is_valid():
+            exercise = form.save(commit=False)
+            exercise.workout_plan = workout
+            exercise.save()
+            messages.success(request, f'Exercise "{exercise.workout_name}" added')
+            return redirect("workout_detail", workout_id=workout.id)
+    else:
+        form = ExerciseForm()
+
+    return render(request, "add_exercise.html", {"form": form, "workout": workout})
