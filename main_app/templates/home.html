@@ -1,37 +1,81 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<h1>All Classes</h1>
 
-{% if user.is_authenticated and user.profile.role == 'trainer' %}
-  <a href="{% url 'create_class' %}">+ Create Class</a>
-  <hr>
-{% endif %}
+<section class="home-hero">
+    <div class="quote-container">
+        <h1 class="motivational-quote">"THE ONLY BAD WORKOUT IS THE ONE THAT DIDN'T HAPPEN."</h1>
+        <p class="quote-sub">Push your limits today at Qawi Gym.</p>
+    </div>
+</section>
 
-<ul>
-  {% for cls in classes %}
-    <li>
-      <h3><a href="{% url 'class_detail' cls.id %}">{{ cls.name }}</a></h3>
-      <p>Trainer: {{ cls.user.username }}</p>
-      <p>Available Slots: {{ cls.available_slots }}</p>
+<section class="trainers-section">
+    <h2 class="section-title">Meet Our Expert Trainers</h2>
+    <div class="trainer-scroll">
 
-      {% if user.is_authenticated and user.profile.role == 'member' %}
+        <div class="trainer-card">
+            <div class="trainer-img" style="background-image: url('https://images.unsplash.com/photo-1534438327276-14e5300c3a48?q=80&w=400&h=500&fit=crop');"></div>
+            <div class="trainer-info">
+                <h3>Coach Dawood</h3>
+                <p>Strength & Conditioning</p>
+            </div>
+        </div>
 
-        {% if membership and membership.status == "approved" %}
-            {% if cls.id in enrolled_class_ids %}
-                <a href="{% url 'unenroll_class' cls.id %}">[Unenroll]</a>
-            {% else %}
-                <a href="{% url 'enroll_class' cls.id %}">[Enroll]</a>
-            {% endif %}
-        {% else %}
-            <p style="color:red;">Membership approval required to enroll.</p>
+        <div class="trainer-card">
+            <div class="trainer-img" style="background-image: url('https://images.unsplash.com/photo-1594381898411-846e7d193883?q=80&w=400&h=500&fit=crop');"></div>
+            <div class="trainer-info">
+                <h3>Coach Dana</h3>
+                <p>HIIT & Cardio Expert</p>
+            </div>
+        </div>
+
+        <div class="trainer-card">
+            <div class="trainer-img" style="background-image: url('https://images.unsplash.com/photo-1583454110551-21f2fa20eddf?auto=format&fit=crop&q=80&w=400&h=500');"></div>
+            <div class="trainer-info">
+                <h3>Coach Isuru</h3>
+                <p>Bodybuilding Professional</p>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<hr class="glow-divider">
+
+<section class="classes-section">
+    <div class="section-header-flex">
+        <h2 class="section-title">All Classes</h2>
+        {% if user.is_authenticated and user.profile.role == 'trainer' %}
+            <a href="{% url 'create_class' %}" class="nav-btn">+ Create Class</a>
         {% endif %}
+    </div>
 
-      {% endif %}
+    <div class="class-list">
+        {% for cls in classes %}
+            <div class="class-card">
+                <div class="class-content">
+                    <h3><a href="{% url 'class_detail' cls.id %}" style="color: var(--accent); text-decoration: none;">{{ cls.name }}</a></h3>
+                    <p class="text-muted">Coach: <strong>{{ cls.user.username }}</strong></p>
+                    <div style="font-size: 0.8rem; margin-top: 10px;">Slots: {{ cls.available_slots }}</div>
+                </div>
 
-    </li>
-  {% empty %}
-    <li>No classes available.</li>
-  {% endfor %}
-</ul>
+                <div class="class-actions">
+                    {% if user.is_authenticated and user.profile.role == 'member' %}
+                        {% if membership and membership.status == "approved" %}
+                            {% if cls.id in enrolled_class_ids %}
+                                <a href="{% url 'unenroll_class' cls.id %}" style="color: var(--danger); text-decoration: none; font-weight: bold;">Unenroll</a>
+                            {% else %}
+                                <a href="{% url 'enroll_class' cls.id %}" style="color: var(--success); text-decoration: none; font-weight: bold;">Enroll Now</a>
+                            {% endif %}
+                        {% else %}
+                            <p style="color: var(--danger); font-size: 0.8rem;">Membership required</p>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-muted">No classes available at the moment.</p>
+        {% endfor %}
+    </div>
+</section>
+
 {% endblock %}

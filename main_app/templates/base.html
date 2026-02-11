@@ -5,63 +5,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Qawi Gym</title>
-
-    <!-- Main CSS File -->
     <link rel="stylesheet" href="{% static 'main_app/css/style.css' %}">
 </head>
 <body>
 
-    <!-- Navbar section -->
     <nav>
-        <!-- Welcome message -->
-        <div>
-            {% if user.is_authenticated %}
-                <span>Welcome {{ user.username }} ({{ user.profile.role|capfirst }})</span>
-            {% endif %}
+        <div class="nav-brand">
+            <a href="{% url 'home' %}" style="text-decoration: none; color: inherit;">
+                QAWI<strong>GYM</strong>
+            </a>
         </div>
 
-        <!-- Navigation Links -->
-        <div>
+        <div class="nav-links">
             {% if user.is_authenticated %}
-                <a href="{% url 'home' %}">Home</a>
-
+                <a href="{% url 'home' %}" class="nav-btn">Home</a>
                 {% if user.profile.role == 'member' %}
-                    <a href="{% url 'choose_membership' %}">Membership Plans</a>
+                    <a href="{% url 'choose_membership' %}" class="nav-btn">Membership</a>
                 {% endif %}
-
-                <a href="{% url 'profile' %}">Profile</a>
-
+                <a href="{% url 'profile' %}" class="nav-btn">Profile</a>
                 <form method="post" action="{% url 'logout' %}" style="display:inline;">
                     {% csrf_token %}
-                    <button type="submit">Logout</button>
+                    <button type="submit" class="nav-btn logout-btn">Logout</button>
                 </form>
             {% else %}
-                <a href="{% url 'login' %}">Login</a>
-                <a href="{% url 'signup' %}">Sign Up</a>
+                <a href="{% url 'login' %}" class="nav-btn">Login</a>
+                <a href="{% url 'signup' %}" class="nav-btn">Sign Up</a>
             {% endif %}
         </div>
     </nav>
 
-    <!--Messages section -->
-    {% if messages %}
-        <ul>
-            {% for message in messages %}
-                <li>{{ message }}</li>
-            {% endfor %}
-        </ul>
+    {% if user.is_authenticated and user.profile.role == 'trainer' %}
+        <a href="{% url 'create_class' %}" class="fab">+</a>
     {% endif %}
 
-    <hr>
-
-    <!-- Back button only showing when anywhere but not at home-->
-    {% if request.path != '/home/' %}
-        <button onclick="window.history.back()" style="margin:10px; padding:5px 10px;">
-            ← Back
-        </button>
-    {% endif %}
-
-    <!-- Main content block -->
     <main>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="card" style="border-left: 5px solid var(--accent); padding: 10px 20px; margin-bottom: 1rem;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        {% if request.path != '/home/' and request.path != '/' and 'login' not in request.path and 'signup' not in request.path %}
+            <div style="margin-bottom: 2rem;">
+                <button onclick="window.history.back()" class="nav-btn">← Back</button>
+            </div>
+        {% endif %}
+
         {% block content %}{% endblock %}
     </main>
 
