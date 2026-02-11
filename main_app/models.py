@@ -99,7 +99,7 @@ class Enrollment(models.Model):
         return f"{self.member.username} → {self.gym_class.name}"
 
 
-# OLD MEMBERSHIP PLAN - KEEP FOR NOW (you can delete after migration)
+# old membership plan keep it here will migth remove after migration
 class MembershipPlan(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
