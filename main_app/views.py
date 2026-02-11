@@ -50,3 +50,17 @@ def home(request):
         {"classes": classes, "enrolled_class_ids": enrolled_class_ids, "membership": membership},
     )
 
+
+
+# show class detail and workouts
+def class_detail(request, class_id):
+    cls = get_object_or_404(GymClass, id=class_id)
+    workout_plans = cls.workout_plans.all()
+    return render(request, "class_detail.html", {"class": cls, "workout_plans": workout_plans})
+
+
+# show workout and exercises
+def workout_detail(request, workout_id):
+    workout = get_object_or_404(WorkoutPlan, id=workout_id)
+    exercises = workout.exercises.all()
+    return render(request, "workout_detail.html", {"workout": workout, "exercises": exercises})
