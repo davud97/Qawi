@@ -53,13 +53,7 @@ We’re always leveling up Qawi! Here’s what’s next:
 
 ---
 
-## 🛠️ Tech Stack
-
-- **Brain:** Django 6.x 🐍  
-- **Database:** PostgreSQL 🗄️  
-- **Face:** HTML5, CSS3, Django Templates 🎨  
-- **Payments:** Stripe / PayPal 💳  
-- **Real-Time:** Django Channels & WebSockets ⚡  
+ 
 
 ---
 
