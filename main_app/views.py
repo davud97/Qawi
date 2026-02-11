@@ -304,3 +304,24 @@ def delete_workout_plan(request, workout_id):
     workout.delete()
     messages.success(request, "Workout plan deleted")
     return redirect("class_detail", class_id=class_id)
+
+# edit exercise trainer only
+@login_required
+@user_passes_test(is_trainer)
+def edit_exercise(request, exercise_id):
+    exercise = get_object_or_404(Exercise, id=exercise_id)
+
+    if request.method == "POST":
+        form = ExerciseForm(request.POST, instance=exercise)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Exercise "{exercise.workout_name}" updated')
+            return redirect("workout_detail", workout_id=exercise.workout_plan.id)
+    else:
+        form = ExerciseForm(instance=exercise)
+
+    return render(
+        request,
+        "add_exercise.html",
+        {"form": form, "workout": exercise.workout_plan, "edit": True},
+    )
