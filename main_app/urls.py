@@ -21,4 +21,10 @@ urlpatterns = [
     path('classes/create/', views.create_class, name='create_class'),
     path('classes/<int:class_id>/add_workout/', views.add_workout_plan, name='add_workout_plan'),
     path('workouts/<int:workout_id>/add_exercise/', views.add_exercise, name='add_exercise'),
+    # Profile & Membership
+    path('profile/', views.profile, name='profile'),
+    path('membership/', views.choose_membership, name='choose_membership'),
+
+
+
 ]
