@@ -25,6 +25,17 @@ urlpatterns = [
     path('profile/', views.profile, name='profile'),
     path('membership/', views.choose_membership, name='choose_membership'),
 
+        # Edit & Delete
+    path('classes/<int:class_id>/edit/', views.edit_class, name='edit_class'),
+    path('classes/<int:class_id>/delete/', views.delete_class, name='delete_class'),
+    path('workouts/<int:workout_id>/edit/', views.edit_workout_plan, name='edit_workout_plan'),
+    path('workouts/<int:workout_id>/delete/', views.delete_workout_plan, name='delete_workout_plan'),
+    path('exercises/<int:exercise_id>/edit/', views.edit_exercise, name='edit_exercise'),
+    path('exercises/<int:exercise_id>/delete/', views.delete_exercise, name='delete_exercise'),
+    path("membership/", views.choose_membership, name="choose_membership"),
+    path('classes/<int:class_id>/enroll/', views.enroll_class, name='enroll_class'),
+    path('classes/<int:class_id>/unenroll/', views.unenroll_class, name='unenroll_class'),
+
 
 
 ]
