@@ -175,3 +175,43 @@ def choose_membership(request):
 
     packages = MembershipPackage.objects.all()
     return render(request, "choose_membership.html", {"packages": packages, "form": form})
+
+
+# profile page
+@login_required
+def profile(request):
+    user = request.user
+    profile_obj = get_profile(user)
+
+    membership = None
+    enrolled_classes = []
+    my_classes = []
+    total_classes = total_workout_plans = total_exercises = 0
+
+    if profile_obj and profile_obj.role == "member":
+        membership = Membership.objects.filter(user=user).order_by("-id").first()
+        enrolled_classes = Enrollment.objects.filter(member=user).select_related("gym_class")
+
+    if profile_obj and profile_obj.role == "trainer":
+        my_classes = GymClass.objects.filter(user=user).prefetch_related("workout_plans__exercises")
+        total_classes = my_classes.count()
+        total_workout_plans = sum(c.workout_plans.count() for c in my_classes)
+        total_exercises = sum(
+            wp.exercises.count()
+            for c in my_classes
+            for wp in c.workout_plans.all()
+        )
+
+    return render(
+        request,
+        "profile.html",
+        {
+            "profile": profile_obj,
+            "membership": membership,
+            "enrolled_classes": enrolled_classes,
+            "my_classes": my_classes,
+            "total_classes": total_classes,
+            "total_workout_plans": total_workout_plans,
+            "total_exercises": total_exercises,
+        },
+    )
