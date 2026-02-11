@@ -215,3 +215,22 @@ def profile(request):
             "total_exercises": total_exercises,
         },
     )
+
+# enroll class member only when they want to enroll but membership is must
+@login_required
+@user_passes_test(is_member)
+def enroll_class(request, class_id):
+    gym_class = get_object_or_404(GymClass, id=class_id)
+
+    membership = Membership.objects.filter(user=request.user).order_by("-id").first()
+    if not membership or membership.status != "approved":
+        messages.error(request, "Need approved membership")
+        return redirect("home")
+
+    if Enrollment.objects.filter(member=request.user, gym_class=gym_class).exists():
+        messages.warning(request, "Already enrolled")
+        return redirect("home")
+
+    Enrollment.objects.create(member=request.user, gym_class=gym_class)
+    messages.success(request, "Enrolled successfully")
+    return redirect("home")
