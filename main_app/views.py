@@ -64,3 +64,31 @@ def workout_detail(request, workout_id):
     workout = get_object_or_404(WorkoutPlan, id=workout_id)
     exercises = workout.exercises.all()
     return render(request, "workout_detail.html", {"workout": workout, "exercises": exercises})
+
+
+# signup page
+def signup(request):
+    error_message = ""
+
+    if request.method == "POST":
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = User.objects.create_user(
+                username=form.cleaned_data["username"],
+                email=form.cleaned_data["email"],
+                password=form.cleaned_data["password"],
+            )
+
+
+            user.signup_role = form.cleaned_data["role"]
+            user.save()
+
+            login(request, user)
+            messages.success(request, f"Welcome {user.username}! Account created")
+            return redirect("home")
+
+        error_message = "Signup info invalid, try again"
+    else:
+        form = SignUpForm()
+
+    return render(request, "signup.html", {"form": form, "error_message": error_message})
