@@ -295,3 +295,12 @@ def edit_workout_plan(request, workout_id):
         {"form": form, "gym_class": workout.gym_class, "edit": True},
     )
 
+# delete workout plan trainer only
+@login_required
+@user_passes_test(is_trainer)
+def delete_workout_plan(request, workout_id):
+    workout = get_object_or_404(WorkoutPlan, id=workout_id)
+    class_id = workout.gym_class.id
+    workout.delete()
+    messages.success(request, "Workout plan deleted")
+    return redirect("class_detail", class_id=class_id)
