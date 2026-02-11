@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>{{ gym_class.name }}</h1>
+
+<p><strong>Available Slots:</strong> {{ gym_class.available_slots }}</p>
+<p><strong>Trainer:</strong> {{ gym_class.user.username }}</p>
+
+<hr>
+
+<h2>Workout Plans</h2>
+{% if workout_plans %}
+  <ul>
+    {% for plan in workout_plans %}
+      <li>{{ plan.name }}</li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No workout plans yet.</p>
+{% endif %}
+
+<a href="{% url 'home' %}">Back to Classes</a>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>
+  {% if edit %}
+    Edit Workout Plan
+  {% else %}
+    Add Workout Plan to {{ gym_class.name }}
+  {% endif %}
+</h1>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">
+    {% if edit %}
+      Update Workout Plan
+    {% else %}
+      Add Workout Plan
+    {% endif %}
+  </button>
+</form>
+
+<a href="{% url 'class_detail' gym_class.id %}">Back to Class</a>
+{% endblock %}

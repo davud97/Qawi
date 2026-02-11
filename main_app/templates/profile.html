@@ -1,0 +1,84 @@
+```django-html
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>YOUR PROFILE</h1>
+
+<p>Email: {{ user.email }}</p>
+<p>Username: {{ user.username }}</p>
+<p>Role: {{ user.profile.role|capfirst }}</p>
+
+{% if user.profile.role == 'trainer' %}
+    <p>Status: {{ user.profile.status|capfirst }}</p>
+{% endif %}
+
+<hr>
+
+{% if user.profile.role == 'member' %}
+    <!-- MEMBER SECTION -->
+    <h2>MEMBERSHIP DETAILS</h2>
+
+    {% if membership %}
+        <p>Current Plan: {{ membership.package.name }}</p>
+        <p>Duration: {{ membership.package.duration_months }} months</p>
+        <p>Price: {{ membership.package.price }} BHD</p>
+        <p>Classes per Week: {{ membership.package.classes_per_week }}</p>
+        <p>Personal Trainer: {% if membership.package.personal_trainer %}Yes{% else %}No{% endif %}</p>
+        <p>Status: {{ membership.status|capfirst }}</p>
+    {% else %}
+        <p>No membership plan yet.</p>
+        <a href="{% url 'choose_membership' %}">[Choose Membership Plan]</a>
+    {% endif %}
+
+    <hr>
+
+    <h2>MY ENROLLED CLASSES</h2>
+    {% if enrolled_classes %}
+        <ul>
+            {% for e in enrolled_classes %}
+                <li>
+                    {{ e.gym_class.name }} (Trainer: {{ e.gym_class.user.username }})
+                    <a href="{% url 'unenroll_class' e.gym_class.id %}">[Unenroll]</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No enrolled classes yet.</p>
+    {% endif %}
+
+{% elif user.profile.role == 'trainer' %}
+    <!-- TRAINER SECTION -->
+    <h2>MY CLASSES</h2>
+
+    {% if my_classes %}
+        <ul>
+            {% for cls in my_classes %}
+                <li>
+                    <strong>{{ cls.name }}</strong><br>
+                    - Available Slots: {{ cls.available_slots }}<br>
+                    - Workout Plans: {{ cls.workout_plans.count }}<br>
+                    <a href="{% url 'class_detail' cls.id %}">[View Details]</a>
+                    <a href="{% url 'edit_class' cls.id %}">[Edit]</a>
+                    <a href="{% url 'delete_class' cls.id %}">[Delete]</a>
+                </li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'create_class' %}">[+ Create New Class]</a>
+    {% else %}
+        <p>No classes created yet.</p>
+        <a href="{% url 'create_class' %}">[+ Create New Class]</a>
+    {% endif %}
+
+    <hr>
+
+    <h2>STATISTICS</h2>
+    <p>- Total Classes Created: {{ total_classes }}</p>
+    <p>- Total Workout Plans: {{ total_workout_plans }}</p>
+    <p>- Total Exercises: {{ total_exercises }}</p>
+{% endif %}
+
+<hr>
+<a href="{% url 'home' %}">[Back to Home]</a>
+
+{% endblock %}
+```

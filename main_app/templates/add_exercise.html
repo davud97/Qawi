@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>
+  {% if edit %}
+    Edit Exercise
+  {% else %}
+    Add Exercise to {{ workout.name }}
+  {% endif %}
+</h1>
+
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">
+    {% if edit %}
+      Update Exercise
+    {% else %}
+      Add Exercise
+    {% endif %}
+  </button>
+</form>
+
+<a href="{% url 'workout_detail' workout.id %}">Back to Workout</a>
+{% endblock %}

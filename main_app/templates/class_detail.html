@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+<h1>{{ class.name }} (Trainer: {{ class.user.username }})</h1>
+<p>Available Slots: {{ class.available_slots }}</p>
+
+{% if user.is_authenticated and user.profile.role == 'trainer' %}
+  <a href="{% url 'edit_class' class.id %}">Edit Class</a>
+  <a href="{% url 'delete_class' class.id %}">Delete Class</a>
+{% endif %}
+
+<hr>
+
+<h2>Workout Plans:</h2>
+{% if user.is_authenticated and user.profile.role == 'trainer' %}
+    <a href="{% url 'add_workout_plan' class.id %}">+ Add Workout Plan</a>
+{% endif %}
+
+<ul>
+{% for plan in workout_plans %}
+  <li>
+    <a href="{% url 'workout_detail' plan.id %}">{{ plan.name }}</a>
+    {% if user.is_authenticated and user.profile.role == 'trainer' %}
+      <a href="{% url 'edit_workout_plan' plan.id %}">Edit</a>
+      <a href="{% url 'delete_workout_plan' plan.id %}">Delete</a>
+    {% endif %}
+  </li>
+{% endfor %}
+</ul>
+
+<a href="{% url 'home' %}">Back to Classes</a>
+{% endblock %}

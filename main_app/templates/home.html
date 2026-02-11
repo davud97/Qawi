@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h1>All Classes</h1>
+
+{% if user.is_authenticated and user.profile.role == 'trainer' %}
+  <a href="{% url 'create_class' %}">+ Create Class</a>
+  <hr>
+{% endif %}
+
+<ul>
+  {% for cls in classes %}
+    <li>
+      <h3><a href="{% url 'class_detail' cls.id %}">{{ cls.name }}</a></h3>
+      <p>Trainer: {{ cls.user.username }}</p>
+      <p>Available Slots: {{ cls.available_slots }}</p>
+
+      {% if user.is_authenticated and user.profile.role == 'member' %}
+
+        {% if membership and membership.status == "approved" %}
+            {% if cls.id in enrolled_class_ids %}
+                <a href="{% url 'unenroll_class' cls.id %}">[Unenroll]</a>
+            {% else %}
+                <a href="{% url 'enroll_class' cls.id %}">[Enroll]</a>
+            {% endif %}
+        {% else %}
+            <p style="color:red;">Membership approval required to enroll.</p>
+        {% endif %}
+
+      {% endif %}
+
+    </li>
+  {% empty %}
+    <li>No classes available.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

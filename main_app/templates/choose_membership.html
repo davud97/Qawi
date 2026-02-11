@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Membership Plans</h1>
+
+<!-- Display the packages as a table -->
+<table border="1" cellpadding="10">
+  <tr>
+    <th>Features</th>
+    {% for pkg in packages %}
+      <th>{{ pkg.name }}</th>
+    {% endfor %}
+  </tr>
+
+  <tr>
+    <td>Duration</td>
+    {% for pkg in packages %}
+      <td>{{ pkg.duration_months }} Month(s)</td>
+    {% endfor %}
+  </tr>
+
+  <tr>
+    <td>Price</td>
+    {% for pkg in packages %}
+      <td>{{ pkg.price }} BHD</td>
+    {% endfor %}
+  </tr>
+
+  <tr>
+    <td>Classes / Week</td>
+    {% for pkg in packages %}
+      <td>{{ pkg.classes_per_week }}</td>
+    {% endfor %}
+  </tr>
+
+  <tr>
+    <td>Personal Trainer</td>
+    {% for pkg in packages %}
+      <td>{% if pkg.personal_trainer %}✔{% else %}✘{% endif %}</td>
+    {% endfor %}
+  </tr>
+
+  <tr>
+    <td>Full Equipment Access</td>
+    {% for pkg in packages %}
+      <td>✔</td>
+    {% endfor %}
+  </tr>
+
+  <tr>
+    <td>Description</td>
+    {% for pkg in packages %}
+      <td>{{ pkg.description }}</td>
+    {% endfor %}
+  </tr>
+</table>
+
+<br>
+
+
+<form method="POST">
+  {% csrf_token %}
+  <h3>Select Your Membership Package:</h3>
+  {{ form.package }}
+  <br><br>
+  <button type="submit">Confirm Membership</button>
+</form>
+
+{% endblock %}

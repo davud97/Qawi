@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>{{ workout.name }}</h1>
+<h3>Class: {{ workout.gym_class.name }}</h3>
+
+<hr>
+
+<h2>Exercises</h2>
+{% if user.is_authenticated and user.profile.role == 'trainer' %}
+    <a href="{% url 'add_exercise' workout.id %}">+ Add Exercise</a>
+{% endif %}
+
+<ul>
+  {% for exercise in exercises %}
+    <li>{{ exercise.workout_name }}
+      {% if user.is_authenticated and user.profile.role == 'trainer' %}
+        <a href="{% url 'edit_exercise' exercise.id %}">Edit</a>
+        <a href="{% url 'delete_exercise' exercise.id %}">Delete</a>
+      {% endif %}
+    </li>
+  {% empty %}
+    <li>No exercises yet.</li>
+  {% endfor %}
+</ul>
+
+{% endblock %}
