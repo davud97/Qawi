@@ -16,3 +16,16 @@ def landing(request):
 # helper that safely get profile without try/except
 def get_profile(user):
     return getattr(user, "profile", None) if user.is_authenticated else None
+
+
+# check if user is trainer
+def is_trainer(user):
+    profile = get_profile(user)
+    return profile is not None and profile.role == "trainer"
+
+
+# check if user is member
+def is_member(user):
+    profile = get_profile(user)
+    return profile is not None and profile.role == "member"
+
