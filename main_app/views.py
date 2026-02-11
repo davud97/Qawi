@@ -246,3 +246,20 @@ def unenroll_class(request, class_id):
     return redirect("home")
 
 #crud below
+
+# edit class trainer only
+@login_required
+@user_passes_test(is_trainer)
+def edit_class(request, class_id):
+    gym_class = get_object_or_404(GymClass, id=class_id)
+
+    if request.method == "POST":
+        form = GymClassForm(request.POST, instance=gym_class)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'Class "{gym_class.name}" updated')
+            return redirect("class_detail", class_id=gym_class.id)
+    else:
+        form = GymClassForm(instance=gym_class)
+
+    return render(request, "create_class.html", {"form": form, "edit": True})
