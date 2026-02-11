@@ -92,3 +92,20 @@ def signup(request):
         form = SignUpForm()
 
     return render(request, "signup.html", {"form": form, "error_message": error_message})
+
+# create class only trainer
+@login_required
+@user_passes_test(is_trainer)
+def create_class(request):
+    if request.method == "POST":
+        form = GymClassForm(request.POST)
+        if form.is_valid():
+            gym_class = form.save(commit=False)
+            gym_class.user = request.user
+            gym_class.save()
+            messages.success(request, f'Class "{gym_class.name}" created')
+            return redirect("home")
+    else:
+        form = GymClassForm()
+
+    return render(request, "create_class.html", {"form": form})
