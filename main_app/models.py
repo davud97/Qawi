@@ -26,3 +26,27 @@ class Profile(models.Model):
 
     def __str__(self):
         return f"{self.user.username} ({self.role})"
+
+class GymClass(models.Model):
+    name = models.CharField(max_length=100)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)  # trainer
+    available_slots = models.IntegerField()
+
+    def __str__(self):
+        return self.name
+
+
+class WorkoutPlan(models.Model):
+    name = models.CharField(max_length=100)
+    gym_class = models.ForeignKey(
+        GymClass,
+        on_delete=models.CASCADE,
+        related_name='workout_plans'
+    )
+
+    def __str__(self):
+        return self.name
+
+
+
+    
