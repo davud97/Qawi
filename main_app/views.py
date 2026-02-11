@@ -148,3 +148,30 @@ def add_exercise(request, workout_id):
         form = ExerciseForm()
 
     return render(request, "add_exercise.html", {"form": form, "workout": workout})
+
+# choose membership only member can because trainer are not for memebrshiip
+
+
+@login_required
+@user_passes_test(is_member)
+def choose_membership(request):
+    existing = Membership.objects.filter(user=request.user).first()
+    if existing:
+        messages.error(request, "Membership already submitted")
+        return redirect("profile")
+
+    if request.method == "POST":
+        form = ChooseMembershipForm(request.POST)
+        if form.is_valid():
+            package = form.cleaned_data["package"]
+            Membership.objects.create(user=request.user, package=package, status="pending")
+            messages.success(
+                request,
+                "Your membership request has been submitted successfully. Our team will contact you shortly.",
+            )
+            return redirect("profile")
+    else:
+        form = ChooseMembershipForm()
+
+    packages = MembershipPackage.objects.all()
+    return render(request, "choose_membership.html", {"packages": packages, "form": form})
